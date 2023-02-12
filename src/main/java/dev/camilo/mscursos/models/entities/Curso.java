@@ -1,6 +1,7 @@
 package dev.camilo.mscursos.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class Curso {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
+  @NotBlank
   private String nombre;
 }

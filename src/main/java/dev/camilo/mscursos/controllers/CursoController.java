@@ -2,12 +2,16 @@ package dev.camilo.mscursos.controllers;
 
 import dev.camilo.mscursos.models.entities.Curso;
 import dev.camilo.mscursos.services.CursoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,11 +23,13 @@ public class CursoController {
 
   @GetMapping
   public ResponseEntity<List<Curso>> listar(){
+
     return ResponseEntity.ok(service.listar());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<?> detalle( @PathVariable Long id ){
+
     Optional <Curso> cursoOptional = service.porId( id );
     if(cursoOptional.isPresent()){
       return ResponseEntity.ok(cursoOptional.get());
@@ -32,13 +38,21 @@ public class CursoController {
   }
 
   @PostMapping
-  public ResponseEntity<?> crear(@RequestBody Curso curso){
+  public ResponseEntity<?> crear(@Valid @RequestBody Curso curso, BindingResult result){
+
+    if ( result.hasErrors() ) {
+      return validar( result );
+    }
     Curso cursoDB = service.guardar( curso );
     return ResponseEntity.status( HttpStatus.CREATED ).body( cursoDB );
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> editar(@PathVariable Long id, @RequestBody Curso curso){
+  public ResponseEntity<?> editar(@Valid @PathVariable Long id, @RequestBody Curso curso, BindingResult result){
+
+    if ( result.hasErrors() ) {
+      return validar( result );
+    }
     Optional <Curso> cursoOptional = service.porId( id );
     if(cursoOptional.isPresent()){
       Curso cursoDB = cursoOptional.get();
@@ -50,11 +64,21 @@ public class CursoController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> eliminar(@PathVariable Long id){
+
     Optional <Curso> cursoOptional = service.porId( id );
     if(cursoOptional.isPresent()){
       service.eliminar( id );
       return ResponseEntity.noContent().build();
     }
     return ResponseEntity.notFound().build();
+  }
+
+  private static ResponseEntity <Map <String, String>> validar( BindingResult result ) {
+
+    Map <String, String> errores = new HashMap <>();
+    result.getFieldErrors().forEach( err -> {
+      errores.put( err.getField(), "El campo ".concat( err.getField() ).concat( " " ).concat( err.getDefaultMessage() ) );
+    } );
+    return ResponseEntity.badRequest().body( errores );
   }
 }
