@@ -49,7 +49,7 @@ public class CursoController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> eliminar(Long id){
+  public ResponseEntity<?> eliminar(@PathVariable Long id){
     Optional <Curso> cursoOptional = service.porId( id );
     if(cursoOptional.isPresent()){
       service.eliminar( id );
