@@ -1,0 +1,7 @@
+
+spring:
+  application:
+    name: ms-cursos
+
+server:
+  port: 8002
