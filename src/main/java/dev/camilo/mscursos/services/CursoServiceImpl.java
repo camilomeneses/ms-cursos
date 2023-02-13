@@ -1,5 +1,6 @@
 package dev.camilo.mscursos.services;
 
+import dev.camilo.mscursos.models.Usuario;
 import dev.camilo.mscursos.models.entities.Curso;
 import dev.camilo.mscursos.repositories.CursoRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,20 @@ public class CursoServiceImpl implements CursoService{
   @Transactional
   public void eliminar( Long id ) {
     repository.deleteById( id );
+  }
+
+  @Override
+  public Optional <Usuario> asignarUsuario( Usuario usuario, Long cursoId ) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional <Usuario> crearUsuario( Usuario usuario, Long cursoId ) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional <Usuario> desasignarUsuario( Usuario usuario, Long cursoId ) {
+    return Optional.empty();
   }
 }
