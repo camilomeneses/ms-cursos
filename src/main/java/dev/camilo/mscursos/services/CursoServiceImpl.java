@@ -1,5 +1,6 @@
 package dev.camilo.mscursos.services;
 
+import dev.camilo.mscursos.clients.UsuarioClientRest;
 import dev.camilo.mscursos.models.Usuario;
 import dev.camilo.mscursos.models.entities.Curso;
 import dev.camilo.mscursos.repositories.CursoRepository;
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class CursoServiceImpl implements CursoService{
 
   private final CursoRepository repository;
+
+  private final UsuarioClientRest usuarioClient;
   @Override
   @Transactional(readOnly = true)
   public List <Curso> listar() {
