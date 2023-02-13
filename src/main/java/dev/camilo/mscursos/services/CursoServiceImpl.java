@@ -3,6 +3,7 @@ package dev.camilo.mscursos.services;
 import dev.camilo.mscursos.clients.UsuarioClientRest;
 import dev.camilo.mscursos.models.Usuario;
 import dev.camilo.mscursos.models.entities.Curso;
+import dev.camilo.mscursos.models.entities.CursoUsuario;
 import dev.camilo.mscursos.repositories.CursoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,17 +44,80 @@ public class CursoServiceImpl implements CursoService{
   }
 
   @Override
+  @Transactional
   public Optional <Usuario> asignarUsuario( Usuario usuario, Long cursoId ) {
+
+    /*Verificamos la existencia del curso en el repositorio*/
+    Optional <Curso> cursoDB = repository.findById( cursoId );
+    if(cursoDB.isPresent()){
+      /*Verificamos la existencia del usuario en el ms-usuarios */
+      Usuario usuarioMs = usuarioClient.detalle( usuario.getId() );
+
+      /* Instanciamos el curso del repo y agregamos la relacion del usuario en la
+      * tabla curso_usuarios */
+      Curso curso = cursoDB.get();
+      CursoUsuario cursoUsuario = new CursoUsuario();
+      cursoUsuario.setUsuarioId( usuarioMs.getId() );
+      curso.addCursoUsuario( cursoUsuario );
+
+      /* Guardamos el curso con el nuevo cambio y retornamos el usuario traido desde
+      * ms-usuarios, sino existe se devolvera un optional vacio, para posteriormente
+      * en el controllador ser manejado la excepcion FeignException*/
+      repository.save( curso );
+      return Optional.of( usuarioMs );
+    }
     return Optional.empty();
   }
 
   @Override
+  @Transactional
   public Optional <Usuario> crearUsuario( Usuario usuario, Long cursoId ) {
+
+    /*Verificamos la existencia del curso en el repositorio*/
+    Optional <Curso> cursoDB = repository.findById( cursoId );
+    if(cursoDB.isPresent()){
+      /* Llevamos el usuario hacia el ms-usuarios para su creacion */
+      Usuario usuarioNuevoMs = usuarioClient.crear( usuario );
+
+      /* Instanciamos el curso del repo y agregamos la relacion del usuario en la
+       * tabla curso_usuarios */
+      Curso curso = cursoDB.get();
+      CursoUsuario cursoUsuario = new CursoUsuario();
+      cursoUsuario.setUsuarioId( usuarioNuevoMs.getId() );
+      curso.addCursoUsuario( cursoUsuario );
+
+      /* Guardamos el curso con el nuevo cambio y retornamos el usuario traido desde
+       * ms-usuarios, sino existe se devolvera un optional vacio, para posteriormente
+       * en el controllador ser manejado la excepcion FeignException*/
+      repository.save( curso );
+      return Optional.of( usuarioNuevoMs );
+    }
     return Optional.empty();
   }
 
   @Override
+  @Transactional
   public Optional <Usuario> desasignarUsuario( Usuario usuario, Long cursoId ) {
+
+    /*Verificamos la existencia del curso en el repositorio*/
+    Optional <Curso> cursoDB = repository.findById( cursoId );
+    if(cursoDB.isPresent()){
+      /*Verificamos la existencia del usuario en el ms-usuarios */
+      Usuario usuarioMs = usuarioClient.detalle( usuario.getId() );
+
+      /* Instanciamos el curso del repo y quitamos la relacion del usuario en la
+       * tabla curso_usuarios */
+      Curso curso = cursoDB.get();
+      CursoUsuario cursoUsuario = new CursoUsuario();
+      cursoUsuario.setUsuarioId( usuarioMs.getId() );
+      curso.removeCursoUsuario( cursoUsuario );
+
+      /* Guardamos el curso con el nuevo cambio y retornamos el usuario traido desde
+       * ms-usuarios, sino existe se devolvera un optional vacio, para posteriormente
+       * en el controllador ser manejado la excepcion FeignException*/
+      repository.save( curso );
+      return Optional.of( usuarioMs );
+    }
     return Optional.empty();
   }
 }
