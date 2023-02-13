@@ -128,7 +128,7 @@ public class CursoController {
   }
 
   @DeleteMapping( "/desasignar-usuario/{cursoId}" )
-  public ResponseEntity <?> desasignarUsuario( @RequestBody Usuario usuario, @PathVariable Long cursoId ) {
+  public ResponseEntity <?> desasignarUsuario( @RequestBody Usuario usuario, @PathVariable("cursoId") Long cursoId ) {
 
     /* Creamos la varible para traer el Optional del service*/
     Optional <Usuario> usuarioOptional;
