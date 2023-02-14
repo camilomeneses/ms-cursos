@@ -88,7 +88,7 @@ public class CursoController {
     return ResponseEntity.badRequest().body( errores );
   }
 
-  // metodos para cliente ms-usuarios
+  // metodos para cliente comunicacion con ms-usuarios
   @PutMapping( "/asignar-usuario/{cursoId}" )
   public ResponseEntity <?> asignarUsuario( @RequestBody Usuario usuario, @PathVariable Long cursoId ) {
 
@@ -153,5 +153,11 @@ public class CursoController {
       return ResponseEntity.status( HttpStatus.OK ).body( usuarioOptional.get() );
     }
     return ResponseEntity.notFound().build();
+  }
+
+  @DeleteMapping("/desasignar-usuario/{id}")
+  public ResponseEntity<?> desasignarCursoUsuarioPorId(@PathVariable Long id){
+    service.desasignarCursoUsuarioPorId( id );
+    return ResponseEntity.noContent().build();
   }
 }

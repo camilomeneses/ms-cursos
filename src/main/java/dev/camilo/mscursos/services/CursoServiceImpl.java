@@ -149,4 +149,10 @@ public class CursoServiceImpl implements CursoService{
     }
     return Optional.empty();
   }
+
+  @Override
+  @Transactional
+  public void desasignarCursoUsuarioPorId( Long id ) {
+    repository.desasignarCursoUsuarioPorId( id );
+  }
 }
