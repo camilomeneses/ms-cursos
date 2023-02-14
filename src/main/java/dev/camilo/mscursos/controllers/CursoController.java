@@ -29,7 +29,13 @@ public class CursoController {
   @GetMapping( "/{id}" )
   public ResponseEntity <?> detalle( @PathVariable Long id ) {
 
-    Optional <Curso> cursoOptional = service.porId( id );
+    /**
+     * dejamos de usar service.porId, para incorporar un mensaje mas completo
+     * con service.porIdConUsuarios donde podemos recoger la informacion de los usuarios
+     * traidos desde ms-usuarios
+     */
+    /*Optional <Curso> cursoOptional = service.porId( id );*/
+    Optional <Curso> cursoOptional = service.porIdConUsuarios( id );
     if ( cursoOptional.isPresent() ) {
       return ResponseEntity.ok( cursoOptional.get() );
     }

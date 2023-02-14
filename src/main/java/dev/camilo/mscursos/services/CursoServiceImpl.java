@@ -120,4 +120,33 @@ public class CursoServiceImpl implements CursoService{
     }
     return Optional.empty();
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional <Curso> porIdConUsuarios( Long id ) {
+
+    /*Verificamos la existencia del curso en el repositorio */
+    Optional <Curso> cursoDB = repository.findById( id );
+    if(cursoDB.isPresent()){
+      Curso curso = cursoDB.get();
+      /* Verificamos que el curso desde la persistencia tenga poblado los usuarios
+      * en la tabla curso_usuarios, si esta poblado sacamos un List con los ids de los
+      * usuarios correspondientes */
+      if(!curso.getCursoUsuarios().isEmpty()){
+        List<Long> ids = curso.getCursoUsuarios()
+            .stream()
+            .map( cursoUsuario -> cursoUsuario.getUsuarioId() )
+            .toList();
+
+        /* realizamos la consulta Http Feign donde traemos los usuarios segun los ids
+        * y luego seteamos los usuarios al curso consultado al comienzo */
+        List <Usuario> usuarios = usuarioClient.obtenerAlumnosPorCurso( ids );
+        curso.setUsuarios( usuarios );
+      }
+      /* devolvemos un Optional basado en la informacion del curso ya con los usuarios,
+      * si no devolvemos un Optional vacio */
+      return Optional.of( curso );
+    }
+    return Optional.empty();
+  }
 }
