@@ -4,7 +4,7 @@ spring:
     name: ms-cursos
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ms-cursos
+    url: jdbc:postgresql://host.docker.internal:5432/ms-cursos
     username: 'camilomeneses'
     password: '@cam123lo_pass'
     driver-class-name: org.postgresql.Driver
