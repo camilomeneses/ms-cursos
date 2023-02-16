@@ -1,12 +1,12 @@
 
 spring:
   application:
-    name: ms-cursos
+    name: ${APP_NAME:ms-cursos}
 
   datasource:
-    url: jdbc:postgresql://postgres15:5432/ms-cursos
-    username: 'camilomeneses'
-    password: '@cam123lo_pass'
+    url: jdbc:postgresql://${DB_HOST:postgres15:5432}/${DB_DATABASE:ms-cursos}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -15,10 +15,15 @@ spring:
     properties:
       hibernate.jdbc.lob.non_contextual_creation: true
 server:
-  port: 8002
+  port: ${PORT:8002}
 
 logging:
   level:
     org:
       hibernate:
         SQL: debug
+
+## Variables de ambiente app
+ms:
+  usuarios:
+    url: ${USUARIOS_URL:ms-usuarios:8001}
