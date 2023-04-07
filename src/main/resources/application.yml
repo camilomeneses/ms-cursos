@@ -1,22 +1,36 @@
 
 spring:
+  ## app name
   application:
     name: ${APP_NAME:ms-cursos}
 
+  ## app datasource config
   datasource:
     url: jdbc:postgresql://${DB_HOST:postgres15:5432}/${DB_DATABASE:ms-cursos}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
 
+  ## app hibernate config
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     properties:
       hibernate.jdbc.lob.non_contextual_creation: true
+
+  ## spring cloud kubernetes config
+  cloud:
+    kubernetes:
+      secrets:
+        enable-api: true
+      discovery:
+        all-namespaces: true
+
+## server port config
 server:
   port: ${PORT:8002}
 
+## console config
 logging:
   level:
     org:
@@ -26,4 +40,4 @@ logging:
 ## Variables de ambiente app
 ms:
   usuarios:
-    url: ${USUARIOS_URL:ms-usuarios:8001}
+    url: ${USUARIOS_URL:ms-usuarios}
